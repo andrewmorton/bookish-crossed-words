@@ -1,9 +1,9 @@
-word_data_path = "./word_source/example.txt"
+from functools import partial
 
 
 def prepare_word_list(input_list):
 
-    def create_word_list(file_path):
+    def open_list_path(file_path):
         with open(file_path, 'r') as raw:
             results = raw.readlines()
         return results
@@ -14,23 +14,49 @@ def prepare_word_list(input_list):
                 input_list)
         return stripped_data
 
-  results = remove_newlines(create_word_list(input_list))
-  return results
+    results = remove_newlines(open_list_path(input_list))
+    return results
 
 
-    # now, take the last two letters of each word
-  
-    # compare those to the list of accepted 2 letter words
-    # if the last two letters are a valid word, return the WHOLE word
-def last_two_letters(word):
-    return word[-2:]
+# now, take the last two letters of each word
+
+# compare those to the list of accepted 2 letter words
+# if the last two letters are a valid word, return the WHOLE word
+def compare_word_endings(word, list_path):
+    letter_list = prepare_word_list(list_path)
+
+    def bite_word(word, distance_from_end):
+        result = str(word[distance_from_end:])
+        return result
+
+    def match_word_closure(word_1):
+        def f(word_2):
+            if word_1 == word_2:
+                return True
+            else:
+                return False
+        return f
+
+    def find_two_letter_ending_matches(word, word_list):
+        word_to_match = match_word_closure(bite_word(word, -2))
+        results = filter(word_to_match, word_list)
+        if list(results):
+            return True
+        else:
+            return False
 
 
 
-def main(dataset):
-    valid_list = prepare_word_list(dataset)
+
+
+
+
+
+def main(english_list_path):
+    valid_list = prepare_word_list(english_list_path)
     return valid_list
 
 
+word_data_path = "./word_source/example.txt"
 # if the last 2 letters of the word are ALSO on the list of words,
-    # then save that word in another data set
+# then save that word in another data set
