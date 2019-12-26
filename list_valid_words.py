@@ -11,19 +11,17 @@ def prepare_word_list(input_list):
                 input_list)
         return stripped_data
 
-    results = remove_newlines(open_list_path(input_list))
-    return results
+    return remove_newlines(open_list_path(input_list))
 
 
-# now, take the last two letters of each word
-
-# compare those to the list of accepted 2 letter words
-# if the last two letters are a valid word, return the WHOLE word
 def compare_word_endings(word, ending_distance, list_path):
     letter_list = prepare_word_list(list_path)
 
     def bite_word(word, distance_from_end):
-        return word[distance_from_end:]
+        return word[
+                distance_from_end[0]:
+                distance_from_end[1]:
+                distance_from_end[2]]
 
     def match_word_closure(word_1):
         def f(word_2):
