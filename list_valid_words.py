@@ -1,6 +1,3 @@
-from functools import partial
-
-
 def prepare_word_list(input_list):
 
     def open_list_path(file_path):
@@ -22,12 +19,11 @@ def prepare_word_list(input_list):
 
 # compare those to the list of accepted 2 letter words
 # if the last two letters are a valid word, return the WHOLE word
-def compare_word_endings(word, list_path):
+def compare_word_endings(word, ending_distance, list_path):
     letter_list = prepare_word_list(list_path)
 
     def bite_word(word, distance_from_end):
-        result = str(word[distance_from_end:])
-        return result
+        return word[distance_from_end:]
 
     def match_word_closure(word_1):
         def f(word_2):
@@ -37,19 +33,16 @@ def compare_word_endings(word, list_path):
                 return False
         return f
 
-    def find_two_letter_ending_matches(word, word_list):
-        word_to_match = match_word_closure(bite_word(word, -2))
-        results = filter(word_to_match, word_list)
+    def find_two_letter_ending_matches(word, ending_distance, word_list):
+        results = filter(
+                match_word_closure(bite_word(word, ending_distance)),
+                word_list)
         if list(results):
             return True
         else:
             return False
 
-
-
-
-
-
+    return find_two_letter_ending_matches(word, ending_distance, letter_list)
 
 
 def main(english_list_path):
